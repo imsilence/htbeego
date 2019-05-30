@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
@@ -20,9 +21,18 @@ type User struct {
 }
 
 func main() {
+	orm.Debug = true
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", "root:881019@tcp(127.0.0.1:3306)/htbeego?charset=utf8mb4&loc=Asia%2FShanghai")
 
-	orm.RegisterModel(new(User))
-	orm.RunSyncdb("default", true, true)
+	orm.RegisterModel(&User{})
+
+	ormer := orm.NewOrm()
+	rawset := ormer.Raw("select id, name from user where name like ?", "%silence%")
+
+	var users []*User
+	rawset.QueryRows(&users)
+	for _, user := range users {
+		fmt.Println(user.Id, user.Name)
+	}
 }

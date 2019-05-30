@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
@@ -20,9 +21,25 @@ type User struct {
 }
 
 func main() {
+	orm.Debug = true
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", "root:881019@tcp(127.0.0.1:3306)/htbeego?charset=utf8mb4&loc=Asia%2FShanghai")
 
-	orm.RegisterModel(new(User))
-	orm.RunSyncdb("default", true, true)
+	orm.RegisterModel(&User{})
+
+	ormer := orm.NewOrm()
+	count := 10
+	birthday, _ := time.Parse("2006-01-02", "1988-10-19")
+
+	users := make([]User, count)
+	for i := 0; i < count; i++ {
+		users[i] = User{
+			Name: fmt.Sprintf("kk%d", i),
+			Password: "123abc!@#",
+			Gender: i % 2 == 0,
+			Birthday: birthday,
+		}
+	}
+	num, err := ormer.InsertMulti(100, users)
+	fmt.Println(num, err)
 }

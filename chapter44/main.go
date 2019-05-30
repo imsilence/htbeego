@@ -24,5 +24,7 @@ func main() {
 	orm.RegisterDataBase("default", "mysql", "root:881019@tcp(127.0.0.1:3306)/htbeego?charset=utf8mb4&loc=Asia%2FShanghai")
 
 	orm.RegisterModel(new(User))
-	orm.RunSyncdb("default", true, true)
+	orm.RunCommand()
+	// orm syncdb -h
+	// orm sqlall -h
 }
