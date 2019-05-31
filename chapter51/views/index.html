@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>模板</title>
+    </head>
+    <body>
+        {{/* 注释 */}}
+        <div>
+            <div>{{ .name }}</div>
+            <div>{{ .age }}</div>
+            <div>{{ .boy }}</div>
+            <div>{{ .teachar }}</div>
+            <div>{{ .scores }}</div>
+            <div>{{ .students }}</div>
+        </div>
+        <div>
+            {{/* 条件 */}}
+            {{ if .boy }} 男 {{else}} 女 {{end}}
+        </div>
+        <div>
+            {{/* 循环 */}}
+            <div>
+                <ul>
+                    {{ range .teachers }}
+                        <li>{{ . }}</li>
+                    {{ end}}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {{ range $index, $teacher := .teachers }}
+                        <li>{{ . }}</li>
+                    {{ else }}
+                        <li>无数据</li>
+                    {{ end}}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {{ range .scores }}
+                        <li>{{ . }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {{ range $key, $value := .scores }}
+                        <li>{{ $key }}: {{ $value }}</li>
+                    {{ else }}
+                        <li>无数据</li>
+                    {{ end }}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {{ range .students }}
+                        <li>{{ .Name }}: {{ .Addr }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {{ range $index, $student := .students }}
+                        <li>{{ $index }}| {{ $student.Name }} : {{ .Addr }} {{ $.students|len }} </li>
+                    {{ else }}
+                        <li>无数据</li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+        <div>
+            {{/* with */}}
+            <div>
+                {{ with .name }}
+                    {{ . }}
+                {{ end }}
+            </div>
+            <div>
+                {{ with $c := .name }}
+                    {{ $c }} {{ . }}
+                {{ end }}
+            </div>
+            <div>
+                {{ with $c := "hi" }}
+                    {{ $c }} {{ . }}
+                {{ end }}
+            </div>
+        </div>
+        <div>
+            {{/* 函数 */}}
+            <div>
+                0: {{ index .teachers 0 }}
+            </div>
+            <div>
+                kk: {{ index .scores "kk" }}
+            </div>
+            <div>
+                0: {{ 0|index .teachers }}
+            </div>
+            <div>
+                kk: {{ "kk"|index .scores }}
+            </div>
+            <div>
+                upper: {{ .name|upper }}
+            </div>
+        </div>
+        <div>
+            {{/* 模板定义和使用*/}}
+            {{ define "emphasize" }}
+                <b>{{ . }}</b>
+            {{ end }}
+
+            <div>
+                {{ template "emphasize" .name }}
+            </div>
+            <div>
+                <ul>
+                    {{ range .teachers }}
+                        <li>{{ template "emphasize" . }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+            <div>
+                <ul>
+                    {{ range $index, $teacher := .teachers }}
+                        <li>{{ $index }}. {{ template "emphasize" $teacher }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+
+            <div>
+                <ul>
+                    {{ range $index, $teacher := .teachers }}
+                        <li>{{ $index }}. {{ template "emphasize.html" $teacher }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+        </div>
+    </body>
+</html>
